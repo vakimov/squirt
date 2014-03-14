@@ -156,10 +156,10 @@ sq.host =  window.location.search.match('sq-dev') ?
       nextNodeTimeoutId = setTimeout(nextNode, intervalMs * getDelay(lastNode, jumped));
     };
 
-    var waitAfterShortWord = 1.2;
-    var waitAfterComma = 2;
-    var waitAfterPeriod = 3;
-    var waitAfterParagraph = 3.5;
+    window.sq.wordDelays = window.sq.wordDelays || [[3, 1], 1.2]
+    var waitAfterComma = 1;
+    var waitAfterPeriod = 2;
+    var waitAfterParagraph = 2.5;
     function getDelay(node, jumped){
       var word = node.word;
       if(jumped) return waitAfterPeriod;
@@ -168,11 +168,21 @@ sq.host =  window.location.search.match('sq-dev') ?
           word == "Ms.") return 1;
       var lastChar = word[word.length - 1];
       if(lastChar.match('”|"')) lastChar = word[word.length - 2];
-      if(lastChar == '\n') return waitAfterParagraph;
-      if('.!?'.indexOf(lastChar) != -1) return waitAfterPeriod;
-      if(',;:–'.indexOf(lastChar) != -1) return waitAfterComma;
-      if(word.length < 4) return waitAfterShortWord;
-      return 1;
+
+      var waitToRead = window.sq.wordDelays[window.sq.wordDelays.length-1];
+      for (var i=0; i < window.sq.wordDelays.length-1; i++) {
+        if (word.length <= window.sq.wordDelays[i][0]) {
+          waitToRead = window.sq.wordDelays[i][1];
+          break;
+        }
+      }
+
+      var waitToRest = 0;
+      if(lastChar == '\n') waitToRest = waitAfterParagraph;
+      else if('.!?'.indexOf(lastChar) != -1) waitToRest = waitAfterPeriod;
+      else if(',;:–'.indexOf(lastChar) != -1) waitToRest = waitAfterComma;
+
+      return waitToRead + waitToRest;
     };
 
     function showTweetButton(words, minutes){

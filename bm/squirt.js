@@ -156,7 +156,7 @@ sq.host =  window.location.search.match('sq-dev') ?
       nextNodeTimeoutId = setTimeout(nextNode, intervalMs * getDelay(lastNode, jumped));
     };
 
-    window.sq.wordDelays = window.sq.wordDelays || [[3, 1], 1.2]
+    window.sq.wordDelays = window.sq.wordDelays || [[3, 1], [5, 1.2], [7, 1.4], [9, 1.6], [10, 2], [11, 2.4], [12, 2.8], 3.2]
     var waitAfterComma = 1;
     var waitAfterPeriod = 2;
     var waitAfterParagraph = 2.5;
